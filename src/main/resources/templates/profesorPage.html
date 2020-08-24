@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <h1>Nume: </h1>
+        <h1 th:text="${currentProfesor.nume}"/>
+    </div>
+    <div class="row">
+        <h1>Prenume: </h1>
+        <h1 th:text="${currentProfesor.prenume}"/>
+    </div>
+    <div class="row">
+        <h1>Varsta: &nbsp;</h1>
+        <h1 th:text="${currentProfesor.varsta}"/>
+    </div>
+    <div class="row">
+        <h1>Specializare: </h1>
+        <h1 th:text="${currentProfesor.specializare}"/>
+    </div>
+    <div class="row">
+        <button onclick=deleteProfesor()>Delete</button>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nume</th>
+            <th scope="col">Corp</th>
+            <th scope="col">Etaj</th>
+            <th scope="col">Titular</th>
+            <th scope="col">Membri</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody id="catedreTableSpecificProfesor">
+        </tbody>
+    </table>
+
+    <div class="input-group">
+        <select class="custom-select" id="custom-select-profesor">
+
+        </select>
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onclick=addCatedraForProfesor()>Adauga Catedra</button>
+        </div>
+    </div>
+
+
+</div>
+</body>
+
+<style>
+    .container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top : 100px;
+    }
+
+    .table{
+    width:30%;
+    margin-top:100px;
+     border: 1px solid black;
+      border-collapse: collapse;
+       padding: 15px;
+       text-align: left;
+       border-spacing: 5px;
+        font-family: arial, sans-serif;
+    }
+    td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+    .row{
+    display: flex;
+    flex-direction: row;
+    }
+
+    .input-group{
+    width: 30%;
+    }
+
+</style>
+<script type="text/javascript" th:src="@{/profesorPage.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let data = /*[[${currentProfesor}]]*/ "Test";
+    console.log(specificProfesor(data.id));
+    availableSpecificProfesor(data.id);
+    /*]]>*/
+
+    function addCatedraForProfesor(){
+        let e = document.getElementById("custom-select-profesor");
+        let pickedCatedra = e.options[e.selectedIndex].value;
+        /*<![CDATA[*/
+        let data = /*[[${currentProfesor}]]*/ "Test";
+        fetch('http://localhost:8080/addProfesorCatedra?profesorId='+ data.id + '&catedraId=' + pickedCatedra,{method:'post'}).then(t=>{
+            specificProfesor(data.id);
+            availableSpecificProfesor(data.id);
+        });
+        /*]]>*/
+    }
+
+    function deleteSpecificCatedra(id){
+        /*<![CDATA[*/
+        let data = /*[[${currentProfesor}]]*/ "Test";
+        console.log(data.id, id);
+        fetch('http://localhost:8080/deleteProfesorCatedra?profesorId=' + data.id + '&catedraId=' + id, {method:'delete'}).then(t=>{
+            specificProfesor(data.id);
+            availableSpecificProfesor(data.id);
+        });
+        /*]]>*/
+    }
+
+    function deleteProfesor(){
+        /*<![CDATA[*/
+        let data = /*[[${currentProfesor}]]*/ "Test";
+        fetch('http://localhost:8080/deleteProfesor/' + data.id,{method:'delete'}).then(t=>window.location.href='http://localhost:8080/');
+        /*]]>*/
+    }
+
+
+
+
+
+</script>
+
+
+
+
+
+
+</html>
